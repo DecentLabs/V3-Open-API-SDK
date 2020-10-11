@@ -60,10 +60,11 @@ public class APIHttpClient {
      */
     public OkHttpClient client() {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-        clientBuilder.connectTimeout(this.config.getConnectTimeout(), TimeUnit.SECONDS);
-        clientBuilder.readTimeout(this.config.getReadTimeout(), TimeUnit.SECONDS);
-        clientBuilder.writeTimeout(this.config.getWriteTimeout(), TimeUnit.SECONDS);
+        clientBuilder.connectTimeout(this.config.getConnectTimeout(), TimeUnit.MILLISECONDS);
+        clientBuilder.readTimeout(this.config.getReadTimeout(), TimeUnit.MILLISECONDS);
+        clientBuilder.writeTimeout(this.config.getWriteTimeout(), TimeUnit.MILLISECONDS);
         clientBuilder.retryOnConnectionFailure(this.config.isRetryOnConnectionFailure());
+        clientBuilder.connectionPool(new ConnectionPool(5, this.config.getConnectTimeout(), TimeUnit.MILLISECONDS));
         clientBuilder.addInterceptor((Interceptor.Chain chain) -> {
             final Request.Builder requestBuilder = chain.request().newBuilder();
             final String timestamp = DateUtils.getUnixTime();
