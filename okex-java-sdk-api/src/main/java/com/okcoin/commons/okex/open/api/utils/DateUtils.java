@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -26,6 +28,10 @@ public class DateUtils {
     public static String TIME_STYLE_S6 = "yyyyMMddHHmmssS";
     public static String TIME_STYLE_S7 = "yyyy年MM月dd日HH时mm分ss秒";
     public static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+
+    public static final DateTimeFormatter ISO_FORMAT = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .withZone(ZoneOffset.UTC);
 
     static {
         DateUtils.SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -114,10 +120,7 @@ public class DateUtils {
      * UNIX timestamp ISO 8601 rule eg: 2018-02-03T05:34:14.110Z
      */
     public static String getUnixTime() {
-        StringBuilder nowStr = new StringBuilder(Instant.now().toString());
-        //可以有效解决字符串下标越界的问题
-        return new StringBuilder().append(nowStr.toString()).toString();
-        //return new StringBuilder().append(nowStr.substring(0,nowStr.lastIndexOf("."))).append(nowStr.substring(nowStr.lastIndexOf(".")).substring(0,4)).append(nowStr.substring(nowStr.length()-1)).toString();
+        return ISO_FORMAT.format(Instant.now());
     }
 
     /**Date
